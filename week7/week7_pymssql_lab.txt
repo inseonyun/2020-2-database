@@ -1,0 +1,70 @@
+## MSSQL 접속
+conn = pymssql.connect(host='host', user = 'user', password = 'pass', database = 'db')
+
+## Connection으로부터 Cursor생성
+cursor = conn.cursor()
+
+--------------------------------------------
+
+## SQL 문 작성
+query = "SELECT * FROM student WHERE name LIKE '%i%'"
+
+## SQL 문 실행
+cursor.execute(query)
+
+--------------------------------------------
+
+## SQL 문 결과 모두 가져오기
+rows = cursor.fetchall()
+print(rows, type(rows))
+
+--------------------------------------------
+
+## SQL 문 재실행
+cursor.execute(query)
+
+## SQL 문 결과 하나 가져옴
+row = cursor.fetchone()
+
+while row :
+  print(row, type(row))
+  row = cursor.fetchone()
+
+print(row)
+
+--------------------------------------------
+
+## SQL 문 재실행
+cursor.execute(query)
+
+## SQL 문 결과 n개씩 가져옴
+rows = cursor.fetchmany(3)
+print('# 3개의 데이터 출력')
+for row in rows:
+  print(row, type(row))
+
+row = cursor.fetchone()
+print('# 나머지 1개의 데이터 출력')
+print(row, type(row))
+
+--------------------------------------------
+
+## SQL 문 작성
+query = "INSERT INTO student VALUES('99999', 'tester', 'Comp.Sci.', 999)"
+
+## SQL 문 실행 및 커밋(변경 사항을 데이터베이스에 저장함)
+cursor.execute(query)
+conn.commit()
+
+--------------------------------------------
+
+## SQL 문 작성
+query = "SELECT * FROM student"
+
+## SQL 문 실행
+cursor.execute(query)
+
+rows = cursor.fetchall()
+for row in rows:
+  print(row)
+
