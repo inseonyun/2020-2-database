@@ -1,0 +1,200 @@
+## Cursor의 활용 -> 문자 % 포맷을 이용한 쿼리 (직접입력)
+
+## MSSQL 접속
+conn = pymssql.connect(host, user, password, database)
+
+## Connection으로부터 Cursor 생성
+cursor = conn.cursor()
+
+## SQL문 작성
+query = "SELECT * FROM student WHERE dept_name = %s"
+
+## SQL 실행
+cursor.execute(query, 'Comp.Sci.')
+
+## SQL문 결과 모두 가져오기
+rows = cursor.fetchall()
+for row in rows:
+  print(row, type(row))
+
+## DB 접속 종료
+conn.close()
+
+
+
+## Cursor의 활용 -> 문자 % 포맷을 이용한 쿼리 (변수 활용 및 입력)
+
+## 검색 할 학과명 입력
+dept_name = input()
+
+## MSSQL 접속
+conn = pymssql.connect(host, user, password, database)
+
+## Connection으로부터 Cursor 생성
+cursor = conn.cursor()
+
+## SQL문 작성
+query = "SELECT * FROM student WHERE dept_name = %s"
+
+## SQL 실행
+cursor.execute(query, dept_name)
+
+## SQL문 결과 모두 가져오기
+rows = cursor.fetchall()
+for row in rows:
+  print(row, type(row))
+
+## DB 접속 종료
+conn.close()
+
+
+
+## Cursor의 활용 -> 문자 % 포맷을 이용한 다중 쿼리 (INSERT문 사용)
+
+## MSSQL 접속
+conn = pymssql.connect(host, user, password, database)
+
+## Connection으로부터 Cursor 생성
+cursor = conn.cursor()
+
+## SQL문 작성 //  id = char, name = varchar, dept_name = varchar, tot_cred = int
+query = "INSERT INTO student VALUES (%s, %s, %s, %d)"
+
+## SQL 실행 //  id, name, dept_name, tot_cred
+cursor.executemany(query, [('00001', 'name1', 'Comp.Sci.', 16),
+                           ('00002', 'name3', 'History.', 80),
+                           ('00003', 'name2', 'Biology.', 104)])
+
+## SQL문 결과 적용하기
+conn.commit()
+
+## DB 접속 종료
+conn.close()
+
+
+
+
+
+## 위 결과 확인
+
+## MSSQL 접속
+conn = pymssql.connect(host, user, password, database)
+
+## Connection으로부터 Cursor 생성
+cursor = conn.cursor()
+
+## SQL문 작성
+query = "SELECT * FROM student"
+
+## SQL 실행
+cursor.execute(query)
+
+## SQL문 결과 모두 가져오기
+rows = cursor.fetchall()
+for row in rows:
+  print(row, type(row))
+
+## DB 접속 종료
+conn.close()
+
+
+
+
+
+
+## Cursor의 활용 -> 문자 % 포맷을 이용한 다중 쿼리 (DELETE 문 사용)
+
+## MSSQL 접속
+conn = pymssql.connect(host, user, password, database)
+
+## Connection으로부터 Cursor 생성
+cursor = conn.cursor()
+
+## SQL문 작성
+query = "DELETE FROM student WHERE name = %s"
+
+## SQL 실행
+cursor.executemany(query, ['name1', 'name2', 'name3'])
+
+## SQL문 결과 적용하기
+conn.commit()
+
+## DB 접속 종료
+conn.close()
+
+
+
+
+
+
+
+
+
+
+## 저장 프로시저
+
+## MSSQL 접속
+conn = pymssql.connect(host, user, password, database)
+
+## Connection으로부터 Cursor 생성
+cursor = conn.cursor()
+
+## SQL문 작성
+sproc = 'sp_help'
+
+## SQL문 실행
+row = cursor.callproc('sp_helptext', ('sp_databases', ))
+
+## SQL문 결과 모두 가져오기
+for row in cursor :
+  print(row, type(row))
+
+## DB 접속 종료
+conn.close()
+
+
+
+
+
+
+
+
+
+
+## 과제 2번 
+## Q. student 테이블의 데이터를 INSERT하는 프로그램 작성
+## 사용자에게 직접 입력을 받아라(id = 19999, name = TESTINPUT, dept_name = History, tot_cred: 120)
+
+id = input('id: ')
+name = input('name: ')
+dept_name = input('dept_name: ')
+tot_cred = input('tot_cred: ')
+
+## MSSQL 접속
+conn = pymssql.connect(host, user, password, database)
+
+## Connection으로부터 Cursor 생성
+cursor = conn.cursor()
+
+## SQL문 작성 //  id = char, name = varchar, dept_name = varchar, tot_cred = int
+query = "INSERT INTO student VALUES (%s, %s, %s, %d)"
+
+## SQL 실행 //  id, name, dept_name, tot_cred
+cursor.execute(query, (id,name,dept_name,tot_cred))
+
+## SQL문 결과 적용하기
+conn.commit()
+
+## 삽입되어 갱신된 SQL문 작성
+query2 = "SELECT * FROM student"
+
+## 삽입되어 갱싱된 SQL문 실행
+cursor.execute(query2)
+
+## 갱신된 SQL문 결과 출력하기
+rows = cursor.fetchall()
+for row in rows:
+  print(row, type(row))
+
+## DB 접속 종료
+conn.close()
